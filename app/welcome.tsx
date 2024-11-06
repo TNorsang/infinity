@@ -19,7 +19,7 @@ const welcome = () => {
         <View style={styles.textContainer}>
           <Text style={styles.title}>infinity</Text>
           <Text style={styles.punchline}>
-            Family stays close, no matter how far apart
+            Together in heart, connected from anywhere.
           </Text>
         </View>
       </View>
