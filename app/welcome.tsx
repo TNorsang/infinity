@@ -1,15 +1,17 @@
 import { StyleSheet, Text, Image, View } from "react-native";
 import React from "react";
-import ScreenWrapper from "@/components/ScreenWrapper";
+import ScreenWrapper from "../components/ScreenWrapper";
 import { StatusBar } from "expo-status-bar";
-import { hp, wp } from "@/helpers/common";
-import { theme } from "@/constants/theme";
-import Button from "@/components/Button";
+import { hp, wp } from "../helpers/common";
+import { theme } from "../constants/theme";
 
 const welcome = () => {
   return (
     <ScreenWrapper bg="white">
       <StatusBar style="dark" />
+      <View className="bg-black">
+        <Text className="text-white">testasdf</Text>{" "}
+      </View>
       <View style={styles.container}>
         <Image
           style={styles.welcomeImage}
@@ -21,11 +23,6 @@ const welcome = () => {
           <Text style={styles.title}>Infinity</Text>
           <Text style={styles.punchline}>The Infinity App</Text>
         </View>
-
-        {/* Footer* */}
-        {/* <View style={styles.footer}>
-          <Button />
-        </View> */}
       </View>
     </ScreenWrapper>
   );
@@ -38,7 +35,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "space-around",
-    backgroundColor: "white",
     marginHorizontal: wp(10),
   },
   welcomeImage: {
@@ -49,7 +45,7 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     fontSize: hp(4),
     textAlign: "center",
-    fontWeight: theme.fonts.extraBold,
+    fontWeight: theme.fonts.extraBold as "800",
   },
   punchline: {
     textAlign: "center",
