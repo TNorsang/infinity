@@ -1,9 +1,9 @@
-import { StyleSheet, Text, Image, View } from "react-native";
+import { StyleSheet, Text, Image, View, Pressable } from "react-native";
 import React from "react";
-import { StatusBar } from "expo-status-bar";
 import { hp, wp } from "../helpers/common";
 import { theme } from "../constants/theme";
 import { LinearGradient } from "expo-linear-gradient";
+import Button from "../components/Button";
 
 const welcome = () => {
   return (
@@ -34,6 +34,12 @@ const welcome = () => {
         ]}
         style={styles.gradient}
       ></LinearGradient>
+      {/* Button */}
+      <Button
+        title="Find infinity"
+        location="/(tabs)"
+        style={styles.button}
+      ></Button>
     </View>
   );
 };
@@ -44,6 +50,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+    alignItems: "center",
   },
   upperHalf: {
     flex: 1,
@@ -81,5 +88,9 @@ const styles = StyleSheet.create({
     marginTop: hp(2),
     fontSize: hp(2),
     color: theme.colors.text,
+  },
+  button: {
+    marginBottom: 30,
+    zIndex: 20,
   },
 });
