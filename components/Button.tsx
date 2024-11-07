@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text, Platform } from "react-native";
 import { Link } from "expo-router";
 import { hp, wp } from "../helpers/common";
 
@@ -14,12 +14,14 @@ export default function Button(props) {
 
 const styles = StyleSheet.create({
   button: {
-    justifyContent: "center", // Center content vertically
-    alignItems: "center", // Center content horizontally
-    width: wp(20),
-    height: hp(8),
-    borderRadius: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    width: Platform.OS === "web" ? wp(20) : wp(50),
+    height: hp(7),
+    borderRadius: hp(3.5),
     backgroundColor: "white",
+    paddingHorizontal: wp(2),
+    overflow: "hidden",
   },
   text: {
     color: "black",

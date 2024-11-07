@@ -1,4 +1,4 @@
-import { StyleSheet, Text, Image, View, Pressable } from "react-native";
+import { StyleSheet, Text, Image, View } from "react-native";
 import React from "react";
 import { hp, wp } from "../helpers/common";
 import { theme } from "../constants/theme";
