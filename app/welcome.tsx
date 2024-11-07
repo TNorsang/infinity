@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     position: "relative",
     bottom: 50,
-    marginTop: hp(20),
+    marginTop: hp(10),
     fontFamily: "SlacksideOne-Regular",
     fontSize: hp(6),
     textAlign: "center",
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
   },
   button: {
-    marginBottom: 80,
+    marginBottom: 100,
     zIndex: 20,
   },
 });
