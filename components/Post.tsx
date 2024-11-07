@@ -2,7 +2,11 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { wp, hp } from "../helpers/common";
 
-const Post = (props) => {
+interface postProps {
+  account: string;
+  content: string;
+}
+const Post: React.FC<postProps> = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.accountContainer}>

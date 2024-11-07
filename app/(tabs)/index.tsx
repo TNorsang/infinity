@@ -1,8 +1,14 @@
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, ListRenderItem } from "react-native";
 import React from "react";
-import Post from "../../components/Post";
+import Post from "@/components/Post";
 
-const DATA = [
+interface ItemData {
+  id: string;
+  account: string;
+  content: string;
+}
+
+const DATA: ItemData[] = [
   { id: "1", account: "Pala", content: "Dear" },
   { id: "2", account: "Norsang", content: "I'm Hungry!" },
   { id: "3", account: "Dolores", content: "I'm getting sued!" },
@@ -10,7 +16,7 @@ const DATA = [
 ];
 
 export default function Feed() {
-  const renderItem = ({ item }) => (
+  const renderItem: ListRenderItem<ItemData> = ({ item }) => (
     <View style={styles.postContainer}>
       <Post account={item.account} content={item.content} />
     </View>
@@ -35,7 +41,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     overflow: "hidden",
   },
-
   listContent: {
     paddingBottom: 20,
   },
