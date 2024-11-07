@@ -3,16 +3,16 @@ import React from "react";
 import Post from "../../components/Post";
 
 const DATA = [
-  { id: "1", content: "Beautiful Trip" },
-  { id: "2", content: "TV TIME!" },
-  { id: "3", content: "Love you guys!" },
-  { id: "4", content: "Can't wait for thanks giving!" },
+  { id: "1", account: "Pala", content: "Dear" },
+  { id: "2", account: "Norsang", content: "I'm Hungry!" },
+  { id: "3", account: "Dolores", content: "I'm getting sued!" },
+  { id: "4", account: "Amala", content: "I'm not materialistic!" },
 ];
 
 export default function Feed() {
   const renderItem = ({ item }) => (
     <View style={styles.postContainer}>
-      <Post content={item.content} />
+      <Post account={item.account} content={item.content} />
     </View>
   );
 

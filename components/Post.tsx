@@ -5,8 +5,8 @@ import { wp, hp } from "../helpers/common";
 const Post = (props) => {
   return (
     <View style={styles.container}>
-      <View>
-        <Text>Account</Text>
+      <View style={styles.accountContainer}>
+        <Text style={styles.account}>{props.account}</Text>
       </View>
       <Text style={styles.text}>{props.content}</Text>
     </View>
@@ -22,12 +22,20 @@ const styles = StyleSheet.create({
     height: hp(30),
     marginVertical: hp(5),
     marginHorizontal: wp(4),
-    justifyContent: "center",
     alignItems: "center",
     borderRadius: 30,
+    padding: 10,
+  },
+  accountContainer: {
+    marginBottom: 10,
+  },
+  account: {
+    color: "white", // Text color for the account name
+    fontWeight: "800",
+    fontSize: wp(4), // Adjust font size if needed
   },
   text: {
-    color: "white",
+    color: "gray",
     fontWeight: "600",
     fontSize: wp(2),
   },
