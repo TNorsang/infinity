@@ -4,6 +4,7 @@ import { hp, wp } from "../helpers/common";
 import { theme } from "../constants/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import Button from "../components/Button";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 const welcome = () => {
   return (

@@ -4,11 +4,11 @@ import { hp, wp } from "../helpers/common";
 
 export default function Button(props) {
   return (
-    <View style={[styles.button, props.style]}>
-      <Link href={props.location}>
+    <Link href={props.location}>
+      <View style={[styles.button, props.style]}>
         <Text style={styles.text}>{props.title}</Text>
-      </Link>
-    </View>
+      </View>
+    </Link>
   );
 }
 
