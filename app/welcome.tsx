@@ -4,9 +4,18 @@ import { hp, wp } from "../helpers/common";
 import { theme } from "../constants/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import Button from "../components/Button";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import AppLoading from "expo-app-loading";
+import { useFonts } from "expo-font";
 
 const welcome = () => {
+  const [slider_font] = useFonts({
+    "SlacksideOne-Regular": require("../assets/fonts/SlacksideOne-Regular.ttf"),
+  });
+
+  if (!slider_font) {
+    return <AppLoading />;
+  }
+
   return (
     <View style={styles.container}>
       {/* Upper half without gradient */}
@@ -20,7 +29,7 @@ const welcome = () => {
         <View style={styles.textContainer}>
           <Text style={styles.title}>infinity</Text>
           <Text style={styles.punchline}>
-            Together in heart, connected from anywhere.
+            Together in heart, connected from anywhere
           </Text>
         </View>
       </View>
@@ -30,17 +39,13 @@ const welcome = () => {
         className="z-10"
         colors={[
           "rgba(255, 246, 229, 0)", // Light orange with 0% opacity (transparent)
-          "rgba(255, 209, 209, 0.6)", // Light pink with 60% opacity
-          "rgba(255, 246, 229, 1)", // Light orange with 100% opacity
+          "rgba(255, 209, 209, 0.6)",
+          "rgba(255, 246, 229, 0.4)",
         ]}
         style={styles.gradient}
       ></LinearGradient>
       {/* Button */}
-      <Button
-        title="Find infinity"
-        location="/(tabs)"
-        style={styles.button}
-      ></Button>
+      <Button title="Sign In" location="/(tabs)" style={styles.button}></Button>
     </View>
   );
 };
@@ -68,6 +73,7 @@ const styles = StyleSheet.create({
     height: hp(30),
     width: hp(30),
     alignSelf: "center",
+    marginTop: 80,
   },
   textContainer: {
     marginTop: 20,
@@ -78,20 +84,21 @@ const styles = StyleSheet.create({
     position: "relative",
     bottom: 50,
     marginTop: hp(20),
-    fontSize: hp(4),
+    fontFamily: "SlacksideOne-Regular",
+    fontSize: hp(6),
     textAlign: "center",
     fontWeight: theme.fonts.extraBold as "800",
   },
   punchline: {
     textAlign: "center",
     position: "relative",
-    bottom: 50,
+    bottom: 60,
     marginTop: hp(2),
-    fontSize: hp(2),
+    fontSize: hp(1.7),
     color: theme.colors.text,
   },
   button: {
-    marginBottom: 30,
+    marginBottom: 80,
     zIndex: 20,
   },
 });
