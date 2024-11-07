@@ -16,6 +16,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="create_post"
+        options={{
+          title: "Create Post",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome size={28} name="plus-square-o" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
