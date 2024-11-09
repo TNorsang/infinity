@@ -1,19 +1,33 @@
 import { StyleSheet, Text, Image, View } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { hp, wp } from "../helpers/common";
 import { theme } from "../constants/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import Button from "../components/Button";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
+
+SplashScreen.preventAutoHideAsync();
 
 const welcome = () => {
   const [slider_font] = useFonts({
-    "SlacksideOne-Regular": require("../assets/fonts/SlacksideOne-Regular.ttf"),
+    "SlacksideOne-Regular": require("@/assets/fonts/SlacksideOne-Regular.ttf"),
   });
 
-  if (!slider_font) {
-    return <AppLoading />;
+  const [appIsReady, setAppIsReady] = useState(false);
+
+  useEffect(() => {
+    async function prepare() {
+      if (slider_font) {
+        setAppIsReady(true);
+        await SplashScreen.hideAsync();
+      }
+    }
+    prepare();
+  }, [slider_font]);
+
+  if (!appIsReady) {
+    return null;
   }
 
   return (
@@ -45,7 +59,11 @@ const welcome = () => {
         style={styles.gradient}
       ></LinearGradient>
       {/* Button */}
-      <Button title="Sign In" location="/(tabs)" style={styles.button}></Button>
+      <Button
+        title="Sign In"
+        location="/login/login"
+        style={styles.button}
+      ></Button>
     </View>
   );
 };

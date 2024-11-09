@@ -1,14 +1,29 @@
-import { StyleSheet, View, Text, Platform } from "react-native";
-import { Link } from "expo-router";
+import { StyleSheet, TouchableOpacity, Text, Platform } from "react-native";
+import { Href, useRouter } from "expo-router";
 import { hp, wp } from "../helpers/common";
 
-export default function Button(props) {
+interface ButtonProps {
+  title: string;
+  location?: Href<string | object>;
+  style?: any;
+  onPress?: () => void;
+}
+
+export default function Button(props: ButtonProps) {
+  const router = useRouter();
+
   return (
-    <Link href={props.location}>
-      <View style={[styles.button, props.style]}>
-        <Text style={styles.text}>{props.title}</Text>
-      </View>
-    </Link>
+    <TouchableOpacity
+      style={[styles.button, props.style]}
+      onPress={() => {
+        props.onPress?.(); // Execute additional press actions if provided
+        if (props.location) {
+          router.push(props.location);
+        } // Cast location to const to satisfy TypeScript
+      }}
+    >
+      <Text style={styles.text}>{props.title}</Text>
+    </TouchableOpacity>
   );
 }
 
@@ -24,6 +39,7 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     paddingHorizontal: wp(2),
 
+    // Drop Shadow
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
