@@ -1,7 +1,6 @@
 import { View } from "react-native";
 import { Session } from "@supabase/supabase-js";
 import Account from "@/components/Account";
-import Auth from "@/components/Auth";
 import { supabase } from "@/lib/supabase";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "expo-router";

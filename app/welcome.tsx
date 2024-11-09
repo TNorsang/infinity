@@ -60,7 +60,7 @@ const welcome = () => {
       ></LinearGradient>
       {/* Button */}
       <Button
-        title="Sign In"
+        title="Get Started"
         location="/login/login"
         style={styles.button}
       ></Button>

@@ -1,13 +1,9 @@
 import React, { useState } from "react";
-import { Alert, StyleSheet, View, AppState } from "react-native";
+import { Alert, StyleSheet, View, AppState, Platform } from "react-native";
 import { supabase } from "@/lib/supabase";
-import { Input } from "@rneui/themed";
-import Button from "@/components/Button";
+import { Button, Input } from "@rneui/themed";
+import { wp, hp } from "@/helpers/common";
 
-// Tells Supabase Auth to continuously refresh the session automatically if
-// the app is in the foreground. When this is added, you will continue to receive
-// `onAuthStateChange` events with the `TOKEN_REFRESHED` or `SIGNED_OUT` event
-// if the user's session is terminated. This should only be registered once.
 AppState.addEventListener("change", (state) => {
   if (state === "active") {
     supabase.auth.startAutoRefresh();
@@ -72,12 +68,22 @@ export default function Auth() {
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title="Sign in" onPress={() => signInWithEmail()} />
+        <Button
+          buttonStyle={styles.button}
+          containerStyle={styles.buttonContainer}
+          titleStyle={styles.titleStyle} // Added titleStyle to set the text color to black
+          title="Sign in"
+          disabled={loading}
+          onPress={() => signInWithEmail()}
+        />
       </View>
       <View style={styles.verticallySpaced}>
         <Button
-          style={styles.button}
+          buttonStyle={styles.button}
+          containerStyle={styles.buttonContainer}
+          titleStyle={styles.titleStyle} // Added titleStyle to set the text color to black
           title="Sign up"
+          disabled={loading}
           onPress={() => signUpWithEmail()}
         />
       </View>
@@ -89,6 +95,7 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 40,
     padding: 12,
+    width: wp(80),
   },
   verticallySpaced: {
     paddingTop: 4,
@@ -99,7 +106,29 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   button: {
-    backgroundColor: "lightblue",
-    borderColor: "lightblue",
+    justifyContent: "center",
+    alignItems: "center",
+    width: Platform.OS === "web" ? wp(20) : wp(50),
+    height: hp(7),
+    borderRadius: hp(10),
+    backgroundColor: "white",
+    borderColor: "white",
+    borderWidth: 5,
+    paddingHorizontal: wp(2),
+
+    // Drop Shadow
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 10,
+  },
+  buttonContainer: {
+    width: Platform.OS === "web" ? wp(20) : wp(50),
+    alignSelf: "center",
+  },
+  titleStyle: {
+    color: "black", // Ensure button text color is black
+    fontWeight: "bold",
   },
 });
