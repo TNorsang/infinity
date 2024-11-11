@@ -48,9 +48,7 @@ export default function Login() {
   return (
     <ScreenWrapper>
       <SafeAreaView style={styles.container}>
-        <View>
-          {!session && <Auth />} {/* Render the Auth page if no session */}
-        </View>
+        <View>{!session && <Auth />}</View>
       </SafeAreaView>
     </ScreenWrapper>
   );

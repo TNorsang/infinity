@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Alert, StyleSheet, View, AppState, Platform } from "react-native";
+import {
+  Alert,
+  StyleSheet,
+  View,
+  AppState,
+  Platform,
+  Text,
+} from "react-native"; // Import Text
 import { supabase } from "@/lib/supabase";
 import { Button, Input } from "@rneui/themed";
 import { wp, hp } from "@/helpers/common";
@@ -24,7 +31,8 @@ export default function Auth() {
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
+    if (error) Alert.alert("Error", error.message); // Always wrap the error message
+
     setLoading(false);
   }
 
@@ -38,9 +46,13 @@ export default function Auth() {
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
+    if (error) Alert.alert("Error", error.message);
     if (!session)
-      Alert.alert("Please check your inbox for email verification!");
+      Alert.alert(
+        "Verification",
+        "Please check your inbox for email verification!"
+      );
+
     setLoading(false);
   }
 
@@ -71,7 +83,7 @@ export default function Auth() {
         <Button
           buttonStyle={styles.button}
           containerStyle={styles.buttonContainer}
-          titleStyle={styles.titleStyle} // Added titleStyle to set the text color to black
+          titleStyle={styles.titleStyle}
           title="Sign in"
           disabled={loading}
           onPress={() => signInWithEmail()}
@@ -81,7 +93,7 @@ export default function Auth() {
         <Button
           buttonStyle={styles.button}
           containerStyle={styles.buttonContainer}
-          titleStyle={styles.titleStyle} // Added titleStyle to set the text color to black
+          titleStyle={styles.titleStyle}
           title="Sign up"
           disabled={loading}
           onPress={() => signUpWithEmail()}
@@ -128,7 +140,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   titleStyle: {
-    color: "black", // Ensure button text color is black
+    color: "black",
     fontWeight: "bold",
   },
 });

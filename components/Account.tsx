@@ -2,13 +2,16 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { StyleSheet, View, Alert, Text } from "react-native";
 import { Button, Input } from "@rneui/themed";
+import { User } from "@supabase/supabase-js";
+import { useRouter } from "expo-router";
 
 export default function Account() {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
   const [website, setWebsite] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
-  const [user, setUser] = useState(null); // State to hold user information
+  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     // Fetch the user session when component mounts
@@ -16,15 +19,15 @@ export default function Account() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      setUser(user);
       if (user) {
-        getProfile(user);
+        setUser(user);
+        await getProfile(user.id);
       }
     };
     fetchUser();
   }, []);
 
-  async function getProfile(user) {
+  async function getProfile(userId: string) {
     try {
       setLoading(true);
       if (!user) throw new Error("No user found!");
@@ -53,7 +56,12 @@ export default function Account() {
     }
   }
 
-  async function updateProfile({ username, website, avatar_url }) {
+  interface data_type {
+    username: string;
+    website: string;
+    avatar_url: string;
+  }
+  async function updateProfile({ username, website, avatar_url }: data_type) {
     try {
       setLoading(true);
       if (!user) throw new Error("No user found!");
@@ -111,7 +119,13 @@ export default function Account() {
       </View>
 
       <View style={styles.verticallySpaced}>
-        <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
+        <Button
+          title="Sign Out"
+          onPress={async () => {
+            await supabase.auth.signOut();
+            router.push("/welcome");
+          }}
+        />
       </View>
     </View>
   );
