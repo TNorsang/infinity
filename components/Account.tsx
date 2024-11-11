@@ -2,28 +2,39 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { StyleSheet, View, Alert, Text } from "react-native";
 import { Button, Input } from "@rneui/themed";
-import { Session } from "@supabase/supabase-js";
 
-export default function Account({ session }: { session: Session }) {
+export default function Account() {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
   const [website, setWebsite] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
+  const [user, setUser] = useState(null); // State to hold user information
 
   useEffect(() => {
-    if (session) getProfile();
-  }, [session]);
+    // Fetch the user session when component mounts
+    const fetchUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
+      if (user) {
+        getProfile(user);
+      }
+    };
+    fetchUser();
+  }, []);
 
-  async function getProfile() {
+  async function getProfile(user) {
     try {
       setLoading(true);
-      if (!session?.user) throw new Error("No user on the session!");
+      if (!user) throw new Error("No user found!");
 
       const { data, error, status } = await supabase
         .from("profiles")
         .select(`username, website, avatar_url`)
-        .eq("id", session?.user.id)
+        .eq("id", user.id)
         .single();
+
       if (error && status !== 406) {
         throw error;
       }
@@ -42,21 +53,13 @@ export default function Account({ session }: { session: Session }) {
     }
   }
 
-  async function updateProfile({
-    username,
-    website,
-    avatar_url,
-  }: {
-    username: string;
-    website: string;
-    avatar_url: string;
-  }) {
+  async function updateProfile({ username, website, avatar_url }) {
     try {
       setLoading(true);
-      if (!session?.user) throw new Error("No user on the session!");
+      if (!user) throw new Error("No user found!");
 
       const updates = {
-        id: session?.user.id,
+        id: user.id,
         username,
         website,
         avatar_url,
@@ -80,7 +83,7 @@ export default function Account({ session }: { session: Session }) {
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Input label="Email" value={session?.user?.email} disabled />
+        <Input label="Email" value={user?.email || ""} disabled />
       </View>
       <View style={styles.verticallySpaced}>
         <Input
@@ -109,9 +112,6 @@ export default function Account({ session }: { session: Session }) {
 
       <View style={styles.verticallySpaced}>
         <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
-      </View>
-      <View>
-        <Text>Hi {username}</Text>
       </View>
     </View>
   );

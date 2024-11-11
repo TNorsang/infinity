@@ -3,13 +3,11 @@ import { Session } from "@supabase/supabase-js";
 import Account from "@/components/Account";
 import { supabase } from "@/lib/supabase";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "expo-router";
 import ScreenWrapper from "../components/ScreenWrapper";
 import { Redirect } from "expo-router";
 
 export default function index() {
   const [session, setSession] = useState<Session | null>(null);
-  const router = useRouter();
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);

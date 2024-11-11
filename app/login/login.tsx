@@ -1,39 +1,58 @@
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import Auth from "@/components/Auth";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 import { useFonts } from "expo-font";
-import { wp, hp } from "@/helpers/common";
-import { Session } from "@supabase/supabase-js";
-import Account from "@/components/Account";
-import { supabase } from "@/lib/supabase";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
-import { Redirect } from "expo-router";
+import ScreenWrapper from "@/components/ScreenWrapper";
+import Auth from "@/components/Auth"; // Assuming this is the login/signup component
+import { supabase } from "@/lib/supabase";
+import { Session } from "@supabase/supabase-js";
 
-export default function login() {
+export default function Login() {
   const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+
   useEffect(() => {
+    // Get the initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setIsLoading(false);
+
+      if (session) {
+        router.replace("/(tabs)/profile"); // Redirect to profile if session exists
+      }
     });
 
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
+    // Listen for session changes
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+        if (session) {
+          router.replace("/(tabs)/profile"); // Redirect if session becomes valid
+        }
+      }
+    );
   }, []);
-  const [slider_font] = useFonts({
+
+  // Load custom font
+  const [fontsLoaded] = useFonts({
     "SlacksideOne-Regular": require("@/assets/fonts/SlacksideOne-Regular.ttf"),
   });
+
+  // Wait until fonts are loaded and session state is determined
+  if (!fontsLoaded || isLoading) {
+    return null; // Render nothing while waiting for fonts and session info
+  }
+
+  // Render the Auth component only if there is no session
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        {session && session.user ? (
-          <Account key={session.user.id} session={session} />
-        ) : (
-          <Auth />
-        )}
-      </View>
-    </SafeAreaView>
+    <ScreenWrapper>
+      <SafeAreaView style={styles.container}>
+        <View>
+          {!session && <Auth />} {/* Render the Auth page if no session */}
+        </View>
+      </SafeAreaView>
+    </ScreenWrapper>
   );
 }
 
@@ -42,14 +61,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-  },
-  signUpContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    fontFamily: "SlacksideOne-Regular",
-    fontSize: wp(20),
   },
 });

@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     borderRadius: hp(10),
     backgroundColor: "white",
     borderColor: "white",
-    borderWidth: 5,
+    borderWidth: 3,
     paddingHorizontal: wp(2),
 
     // Drop Shadow

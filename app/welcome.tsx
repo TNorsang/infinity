@@ -6,15 +6,18 @@ import { LinearGradient } from "expo-linear-gradient";
 import Button from "../components/Button";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
+import { useRouter } from "expo-router"; // Import useRouter for navigation
+import { supabase } from "@/lib/supabase"; // Import Supabase
 
 SplashScreen.preventAutoHideAsync();
 
-const welcome = () => {
+const Welcome = () => {
   const [slider_font] = useFonts({
     "SlacksideOne-Regular": require("@/assets/fonts/SlacksideOne-Regular.ttf"),
   });
 
   const [appIsReady, setAppIsReady] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     async function prepare() {
@@ -29,6 +32,21 @@ const welcome = () => {
   if (!appIsReady) {
     return null;
   }
+
+  // Function to handle button click
+  const handleGetStarted = async () => {
+    // Check if session exists
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (session) {
+      // If session exists, go to profile
+      router.push("/(tabs)/profile");
+    } else {
+      // If no session, go to login
+      router.push("/login/login");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -61,14 +79,14 @@ const welcome = () => {
       {/* Button */}
       <Button
         title="Get Started"
-        location="/login/login"
         style={styles.button}
-      ></Button>
+        onPress={handleGetStarted} // Set the button click handler to check session
+      />
     </View>
   );
 };
 
-export default welcome;
+export default Welcome;
 
 const styles = StyleSheet.create({
   container: {
