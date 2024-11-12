@@ -20,11 +20,7 @@ export default function index() {
   return (
     <ScreenWrapper>
       <View>
-        {session && session.user ? (
-          <Account key={session.user.id} session={session} />
-        ) : (
-          <Redirect href="/welcome" />
-        )}
+        {session && session.user ? <Account /> : <Redirect href="/welcome" />}
       </View>
     </ScreenWrapper>
   );

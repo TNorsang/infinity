@@ -47,12 +47,6 @@ export default function Auth() {
     });
 
     if (error) Alert.alert("Error", error.message);
-    if (!session)
-      Alert.alert(
-        "Verification",
-        "Please check your inbox for email verification!"
-      );
-
     setLoading(false);
   }
 
