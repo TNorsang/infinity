@@ -35,7 +35,7 @@ if (Platform.OS === "web" && typeof window !== "undefined") {
 // Now create your client:
 export const supabase = createClient(
   "https://rdpatnawswtewpvmecsa.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…aT5YvtiIhBx3rt2gdw5Rb5TYW6wJ80gZ84ogJ5Lnocs",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkcGF0bmF3c3d0ZXdwdm1lY3NhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc0MTI0ODIsImV4cCI6MjA2Mjk4ODQ4Mn0.aT5YvtiIhBx3rt2gdw5Rb5TYW6wJ80gZ84ogJ5Lnocs",
   {
     auth: {
       storage: storageImplementation,
