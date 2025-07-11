@@ -6,9 +6,11 @@ import {
   AppState,
   Platform,
   Text,
+  ActivityIndicator,
+  TouchableOpacity,
 } from "react-native"; // Import Text
 import { supabase } from "@/lib/supabase";
-import { Button, Input } from "@rneui/themed";
+import { Button, Input, Icon } from "@rneui/themed";
 import { wp, hp } from "@/helpers/common";
 
 AppState.addEventListener("change", (state) => {
@@ -23,54 +25,73 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
 
   async function signInWithEmail() {
     setLoading(true);
+    setMessage(null);
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
-
-    if (error) Alert.alert("Error", error.message); // Always wrap the error message
-
+    if (error) setMessage(error.message);
+    else setMessage("Signed in!");
     setLoading(false);
   }
 
   async function signUpWithEmail() {
     setLoading(true);
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
+    setMessage(null);
+    const { error } = await supabase.auth.signUp({
       email: email,
       password: password,
     });
-
-    if (error) Alert.alert("Error", error.message);
+    if (error) setMessage(error.message);
+    else setMessage("Check your email for confirmation!");
     setLoading(false);
   }
 
   return (
     <View style={styles.container}>
+      <Text
+        style={{
+          fontSize: 28,
+          fontWeight: "bold",
+          marginBottom: 24,
+          alignSelf: "center",
+        }}
+      >
+        Welcome
+      </Text>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"
           leftIcon={{ type: "font-awesome", name: "envelope" }}
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={setEmail}
           value={email}
           placeholder="email@address.com"
-          autoCapitalize={"none"}
+          autoCapitalize="none"
+          keyboardType="email-address"
         />
       </View>
       <View style={styles.verticallySpaced}>
         <Input
           label="Password"
           leftIcon={{ type: "font-awesome", name: "lock" }}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={setPassword}
           value={password}
-          secureTextEntry={true}
+          secureTextEntry={!showPassword}
           placeholder="Password"
-          autoCapitalize={"none"}
+          autoCapitalize="none"
+          rightIcon={
+            <TouchableOpacity onPress={() => setShowPassword((v) => !v)}>
+              <Icon
+                name={showPassword ? "eye-slash" : "eye"}
+                type="font-awesome"
+              />
+            </TouchableOpacity>
+          }
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
@@ -78,9 +99,9 @@ export default function Auth() {
           buttonStyle={styles.button}
           containerStyle={styles.buttonContainer}
           titleStyle={styles.titleStyle}
-          title="Sign in"
-          disabled={loading}
-          onPress={() => signInWithEmail()}
+          title={loading ? <ActivityIndicator color="black" /> : "Sign in"}
+          disabled={loading || !email || !password}
+          onPress={signInWithEmail}
         />
       </View>
       <View style={styles.verticallySpaced}>
@@ -88,11 +109,22 @@ export default function Auth() {
           buttonStyle={styles.button}
           containerStyle={styles.buttonContainer}
           titleStyle={styles.titleStyle}
-          title="Sign up"
-          disabled={loading}
-          onPress={() => signUpWithEmail()}
+          title={loading ? <ActivityIndicator color="black" /> : "Sign up"}
+          disabled={loading || !email || !password}
+          onPress={signUpWithEmail}
         />
       </View>
+      {message && (
+        <Text
+          style={{
+            color: message.includes("Error") ? "red" : "green",
+            marginTop: 16,
+            alignSelf: "center",
+          }}
+        >
+          {message}
+        </Text>
+      )}
     </View>
   );
 }

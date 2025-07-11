@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { StyleSheet, View, Alert, Text } from "react-native";
-import { Button, Input } from "@rneui/themed";
+import {
+  StyleSheet,
+  View,
+  Alert,
+  Text,
+  ActivityIndicator,
+  Image,
+} from "react-native";
+import { Button, Input, Icon } from "@rneui/themed";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
 
@@ -11,6 +18,7 @@ export default function Account() {
   const [website, setWebsite] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [user, setUser] = useState<User | null>(null);
+  const [feedback, setFeedback] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -32,13 +40,13 @@ export default function Account() {
       setLoading(true);
       if (!user) throw new Error("No user found!");
 
-      const { data, error, status } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .select(`username, website, avatar_url`)
         .eq("id", user.id)
         .single();
 
-      if (error && status !== 406) {
+      if (error) {
         throw error;
       }
 
@@ -64,6 +72,7 @@ export default function Account() {
   async function updateProfile({ username, website, avatar_url }: data_type) {
     try {
       setLoading(true);
+      setFeedback(null);
       if (!user) throw new Error("No user found!");
 
       const updates = {
@@ -79,9 +88,10 @@ export default function Account() {
       if (error) {
         throw error;
       }
+      setFeedback("Profile updated!");
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message);
+        setFeedback(error.message);
       }
     } finally {
       setLoading(false);
@@ -90,6 +100,33 @@ export default function Account() {
 
   return (
     <View style={styles.container}>
+      <Text
+        style={{
+          fontSize: 24,
+          fontWeight: "bold",
+          marginBottom: 20,
+          alignSelf: "center",
+        }}
+      >
+        Account
+      </Text>
+      <View style={{ alignItems: "center", marginBottom: 20 }}>
+        {avatarUrl ? (
+          <Image
+            source={{ uri: avatarUrl }}
+            style={{ width: 80, height: 80, borderRadius: 40, marginBottom: 8 }}
+          />
+        ) : (
+          <Icon name="user-circle" type="font-awesome" size={80} color="#ccc" />
+        )}
+      </View>
+      {loading && (
+        <ActivityIndicator
+          size="large"
+          color="#000"
+          style={{ marginBottom: 16 }}
+        />
+      )}
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input label="Email" value={user?.email || ""} disabled />
       </View>
@@ -97,27 +134,25 @@ export default function Account() {
         <Input
           label="Username"
           value={username || ""}
-          onChangeText={(text) => setUsername(text)}
+          onChangeText={setUsername}
         />
       </View>
       <View style={styles.verticallySpaced}>
         <Input
           label="Website"
           value={website || ""}
-          onChangeText={(text) => setWebsite(text)}
+          onChangeText={setWebsite}
         />
       </View>
-
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
-          title={loading ? "Loading ..." : "Update"}
+          title={loading ? <ActivityIndicator color="#fff" /> : "Update"}
           onPress={() =>
             updateProfile({ username, website, avatar_url: avatarUrl })
           }
           disabled={loading}
         />
       </View>
-
       <View style={styles.verticallySpaced}>
         <Button
           title="Sign Out"
@@ -127,6 +162,17 @@ export default function Account() {
           }}
         />
       </View>
+      {feedback && (
+        <Text
+          style={{
+            color: feedback.includes("Error") ? "red" : "green",
+            marginTop: 16,
+            alignSelf: "center",
+          }}
+        >
+          {feedback}
+        </Text>
+      )}
     </View>
   );
 }
