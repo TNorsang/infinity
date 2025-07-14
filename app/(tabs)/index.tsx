@@ -13,6 +13,7 @@ import { supabase } from "@/lib/supabase";
 
 interface ItemData {
   id: string;
+  username: string;
   account: string;
   content: string;
   media_urls?: string;
@@ -39,28 +40,19 @@ export default function Feed() {
     setRefreshing(true);
     const { data, error } = await supabase
       .from("posts")
-      .select(
-        `
-        id,
-        content,
-        media_urls,
-        user_id,
-        users: user_id (
-          username: user_metadata->>username,
-          avatar_url: user_metadata->>avatar_url,
-          email
-        )
-      `
-      )
-      .order("id", { ascending: false });
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) {
+      console.log("Supabase fetch error:", error);
+    }
     if (data) {
       setPosts(
         data.map((item: any) => ({
           id: item.id,
-          account: item.users?.username || item.users?.email || "User",
+          account: "User", // or item.user_id if you want to show the id
           content: item.content,
           media_urls: item.media_urls,
-          avatarUrl: item.users?.avatar_url,
+          avatarUrl: undefined, // No avatar info in your table
         }))
       );
     }
@@ -70,7 +62,7 @@ export default function Feed() {
   const renderItem: ListRenderItem<ItemData> = ({ item }) => (
     <View style={styles.postContainer}>
       <Post
-        account={item.account}
+        account={item.username || "User"}
         content={item.content}
         imageUrl={item.media_urls}
         avatarUrl={item.avatarUrl}

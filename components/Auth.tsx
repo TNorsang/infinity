@@ -27,6 +27,7 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [username, setUsername] = useState("");
 
   async function signInWithEmail() {
     setLoading(true);
@@ -43,12 +44,29 @@ export default function Auth() {
   async function signUpWithEmail() {
     setLoading(true);
     setMessage(null);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: email,
       password: password,
     });
-    if (error) setMessage(error.message);
-    else setMessage("Check your email for confirmation!");
+    if (error) {
+      setMessage(error.message);
+      setLoading(false);
+      return;
+    }
+    // Insert into profiles table if sign up succeeded
+    if (data.user) {
+      const { error: profileError } = await supabase.from("profiles").upsert({
+        id: data.user.id, // Use the uuid from Supabase Auth
+        email: email,
+        username: username,
+      });
+      if (profileError) {
+        setMessage("Sign up succeeded, but failed to save username.");
+        setLoading(false);
+        return;
+      }
+    }
+    setMessage("Check your email for confirmation!");
     setLoading(false);
   }
 
@@ -64,6 +82,16 @@ export default function Auth() {
       >
         Welcome
       </Text>
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Input
+          label="Username"
+          leftIcon={{ type: "font-awesome", name: "user" }}
+          onChangeText={setUsername}
+          value={username}
+          placeholder="Choose a username"
+          autoCapitalize="none"
+        />
+      </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"

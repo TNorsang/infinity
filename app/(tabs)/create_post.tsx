@@ -83,6 +83,7 @@ export default function CreatePost() {
           user_id: user.id,
           content: text,
           media_urls: mediaUrl,
+          username: user.user_metadata?.username || user.email,
         },
       ]);
       if (insertError) throw insertError;
