@@ -38,17 +38,19 @@ const Post: React.FC<postProps> = ({
         </TouchableOpacity>
       </View>
       {/* Post Image */}
-      <View style={styles.imageContainer}>
-        <Image
-          resizeMode="cover"
-          source={
-            imageUrl
-              ? { uri: imageUrl }
-              : require("@/assets/images/post_image_one.png")
-          }
-          style={styles.postImage}
-        />
-      </View>
+      {imageUrl && (
+        <View style={styles.imageContainer}>
+          <Image
+            resizeMode="cover"
+            source={{ uri: imageUrl }}
+            style={styles.postImage}
+          />
+        </View>
+      )}
+
+      {/* Post Content */}
+      <Text style={styles.text}>{content}</Text>
+
       {/* Actions */}
       <View style={styles.actions}>
         <TouchableOpacity>
@@ -67,7 +69,6 @@ const Post: React.FC<postProps> = ({
         </TouchableOpacity>
       </View>
       {/* Content */}
-      <Text style={styles.text}>{content}</Text>
     </View>
   );
 };
@@ -77,7 +78,7 @@ export default Post;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
-    width: wp(90),
+    width: wp(70),
     borderRadius: 18,
     marginVertical: hp(2),
     marginHorizontal: wp(2),
@@ -87,6 +88,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 2,
+    alignSelf: "flex-start",
+    flexGrow: 0,
   },
   header: {
     flexDirection: "row",
@@ -104,7 +107,8 @@ const styles = StyleSheet.create({
   account: {
     color: "#222",
     fontWeight: "700",
-    fontSize: wp(4.5),
+    fontSize: wp(2),
+    marginLeft: 10,
   },
   imageContainer: {
     width: "100%",
@@ -116,7 +120,8 @@ const styles = StyleSheet.create({
   },
   postImage: {
     width: "100%",
-    height: "100%",
+    height: undefined,
+    flex: 1,
   },
   actions: {
     flexDirection: "row",
@@ -127,8 +132,8 @@ const styles = StyleSheet.create({
   text: {
     color: "#222",
     fontWeight: "400",
-    fontSize: wp(3.5),
-    paddingHorizontal: 12,
-    marginBottom: 8,
+    fontSize: wp(1.5),
+    paddingHorizontal: 20,
+    marginVertical: 20,
   },
 });

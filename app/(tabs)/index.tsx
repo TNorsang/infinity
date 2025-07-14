@@ -123,14 +123,16 @@ export default function Feed() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
-    alignItems: "center",
-    overflow: "hidden",
+    backgroundColor: "#fff",
+    paddingTop: 16,
   },
   listContent: {
-    paddingBottom: 20,
+    paddingBottom: 24,
+    paddingHorizontal: 0,
   },
   postContainer: {
+    width: "100%",
     alignItems: "center",
+    marginBottom: 18,
   },
 });
