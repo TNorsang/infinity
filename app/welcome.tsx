@@ -41,7 +41,7 @@ const Welcome = () => {
     } = await supabase.auth.getSession();
     if (session) {
       // If session exists, go to profile
-      router.push("/(tabs)/profile");
+      router.push("/(tabs)/");
     } else {
       // If no session, go to login
       router.push("/login/login");
