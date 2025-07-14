@@ -19,7 +19,7 @@ export default function Login() {
       setIsLoading(false);
 
       if (session) {
-        router.replace("/(tabs)/"); // Redirect to profile if session exists
+        router.replace("/"); // <-- This should be your home page route
       }
     });
 
@@ -28,7 +28,7 @@ export default function Login() {
       (_event, session) => {
         setSession(session);
         if (session) {
-          router.replace("/(tabs)/"); // Redirect if session becomes valid
+          router.replace("/"); // <-- Home page route
         }
       }
     );

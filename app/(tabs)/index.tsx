@@ -40,7 +40,15 @@ export default function Feed() {
     setRefreshing(true);
     const { data, error } = await supabase
       .from("posts")
-      .select("*")
+      .select(
+        `
+        *,
+        profiles (
+          username,
+          avatar_url
+        )
+      `
+      )
       .order("created_at", { ascending: false });
     if (error) {
       console.log("Supabase fetch error:", error);
@@ -49,10 +57,11 @@ export default function Feed() {
       setPosts(
         data.map((item: any) => ({
           id: item.id,
-          account: "User", // or item.user_id if you want to show the id
+          username: item.profiles?.username || "User",
+          account: item.profiles?.username || "User",
           content: item.content,
           media_urls: item.media_urls,
-          avatarUrl: undefined, // No avatar info in your table
+          avatarUrl: item.profiles?.avatar_url,
         }))
       );
     }
@@ -72,6 +81,23 @@ export default function Feed() {
 
   const onRefresh = useCallback(() => {
     fetchPosts();
+  }, []);
+
+  useEffect(() => {
+    const subscription = supabase
+      .channel("public:posts")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "posts" },
+        (payload) => {
+          fetchPosts(); // Or update posts state directly
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, []);
 
   return (
